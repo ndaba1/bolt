@@ -11,3 +11,5 @@ pub mod parser;
 
 /// A set of general utilities for the program, such as reading and writing to the fs
 pub mod utils;
+
+pub mod core;
