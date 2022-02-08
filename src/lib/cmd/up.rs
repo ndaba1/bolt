@@ -8,6 +8,7 @@ use std::process::Command;
 
 pub fn up(args: &Vec<String>, cmd: &parser::Command) {
     if args.is_empty() {
+        // dont throw err, instead prompt for opts: run all, enter prio, choose
         Program::output_command_help(cmd, "Missing required argument");
         return;
     }
@@ -70,6 +71,7 @@ fn execute(args: Vec<String>, target: &str, dir: PathBuf) {
     let first_arg = if target == "windows" { "/C" } else { "-c" };
 
     println!("{}", "🚀 Starting your application...".green());
+
     let mut command = Command::new(shell)
         .arg(first_arg)
         .args(args)
