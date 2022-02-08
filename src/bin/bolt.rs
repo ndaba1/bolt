@@ -21,7 +21,7 @@ fn main() {
     let config = program.parse(&refined_args);
     match config {
         Some(val) => resolve_cmd(&val, &refined_args),
-        None => println!(),
+        None => redirect_cmd(&program, &refined_args),
     }
 }
 
@@ -36,5 +36,11 @@ fn resolve_cmd(cfg: &Vec<&Command>, args: &Vec<String>) {
     match config[0] {
         "up" => up(refined_args, command),
         _ => println!("Something else"),
+    }
+}
+
+fn redirect_cmd(prog: &Program, args: &Vec<String>) {
+    if args.is_empty() {
+        Program::output_help(&prog.cmds, "You did not pass any command!")
     }
 }
