@@ -1,19 +1,25 @@
 use super::parser::Command;
-
-const BOLT_VERSION: &str = "0.1.0";
-const BOLT_TAG_LINE: &str = "A CLI for bootstrapping projects using Bolt";
+use colored::*;
 
 #[derive(Debug)]
 /// The crux of the whole cli, contains a commands field that stores all the program commands in a vector
 pub struct Program {
     /// Holds all the possible commands of the program
     pub cmds: Vec<Command>,
+    pub version: String,
+    pub author: String,
+    pub about: String,
 }
 
 impl Program {
     /// Creates a new instance of the program with an empty vector for the cmds field
     pub fn new() -> Self {
-        Self { cmds: vec![] }
+        Self {
+            cmds: vec![],
+            version: "0.1.0".to_owned(),
+            author: "Victor Ndaba".to_owned(),
+            about: "A CLI for bootstrapping projects using Bolt".to_owned(),
+        }
     }
 
     pub fn add_cmd() -> Command {
@@ -56,7 +62,7 @@ impl Program {
             .command("init, <workspace-name> ")
             .alias("i")
             .describe("Creates and bootstraps a new bolt project workspace.")
-            .option("-q | --quiet |  | Skips the prompts and setup default workspace")
+            .option("-q | --quiet |  | Skips the prompts and sets up the default workspace")
             .option(hf)
             .build(self);
 
@@ -101,7 +107,7 @@ impl Program {
                 true
             }
             None => {
-                Program::output_help(cmds, "You have not passed any command!");
+                // Program::output_help(cmds, "You have not passed any command!");
                 false
             }
         }
@@ -121,7 +127,7 @@ impl Program {
     /// Outputs help for the program, and prints the error if any is passed
     pub fn output_help(cmds: &Vec<Command>, err: &str) {
         println!();
-        println!("{}", BOLT_TAG_LINE);
+        println!("{}", Program::new().about.yellow());
         println!();
         println!("USAGE: ");
         println!("   bolt [command] [options]");
@@ -129,22 +135,31 @@ impl Program {
         println!("COMMANDS: ");
         for cmd in cmds {
             let cfg: Vec<_> = cmd.name.split(",").collect();
-            println!("  ({} | {}) [options] {} ", &cfg[0], cmd.alias, &cfg[1]);
+            println!(
+                "  ({} | {}) {} {} ",
+                &cfg[0].cyan(),
+                cmd.alias.cyan(),
+                "[options]".cyan(),
+                &cfg[1].cyan()
+            );
             println!("     {}", cmd.description);
             println!();
         }
-        println!("Run: bolt <command> --help | -h for specific command help.");
+        println!(
+            "  Run: bolt {} for detailed usage of a command",
+            "<command> --help | -h".cyan()
+        );
         println!();
         if !err.is_empty() {
-            println!("  {}", err);
-            // println!();
+            println!("{}", err.red());
+            println!();
         }
     }
 
     /// Simply prints the version information for the program
     pub fn output_version() {
         println!();
-        println!("You are using bolt version: {}", BOLT_VERSION);
+        println!("You are using bolt version: {}", Program::new().version);
         println!();
     }
 
