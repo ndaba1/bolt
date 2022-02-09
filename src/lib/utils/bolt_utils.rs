@@ -4,31 +4,50 @@ use serde::{Deserialize, Serialize};
 use std::fs::read_to_string;
 use std::path::Path;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Config {
     pub info: Reference,
     pub policies: Vec<Policy>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Reference {
     pub name: String,
+    pub alias: String,
     pub priority: usize,
     pub env: Envrionment,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Envrionment {
     pub from: String,
     pub cli: Option<String>,
-    pub pkg_mgr: Option<String>,
+    pub pkg_mgr: PkgMgr,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Policy {
     pub name: String,
     pub depends_on: String,
-    pub map_to: String,
+    pub map_to: MapCmd,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct PkgMgr {
+    pub value: String,
+    pub cmds: Cmd,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct Cmd {
+    pub add: String,
+    pub list: String,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct MapCmd {
+    pub value: String,
+    pub cmd: Option<String>,
 }
 
 pub fn get_config(dir: &Path) -> Config {
