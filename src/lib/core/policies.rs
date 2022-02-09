@@ -1,6 +1,6 @@
-use super::super::utils::{Config, Policy};
+use super::super::utils::{Policy, ProjectConfig};
 
-pub fn resolve_policy(cfg: Config, val: String) -> (Option<String>, String, String) {
+pub fn resolve_policy(cfg: ProjectConfig, val: String) -> (Option<String>, String, String) {
     let cmd: Vec<&Policy> = cfg.policies.iter().filter(|p| p.name == val).collect();
     let policy = &cmd.first().unwrap();
 
@@ -33,7 +33,7 @@ pub fn resolve_policy(cfg: Config, val: String) -> (Option<String>, String, Stri
             (
                 pre_load,
                 format!("{} {}", value, cmd),
-                "➕ Installing dependencies...".to_owned(),
+                "➕ Checking dependencies...".to_owned(),
             )
         }
         _ => (None, "".to_owned(), "".to_owned()),
