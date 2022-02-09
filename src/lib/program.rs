@@ -1,5 +1,5 @@
 use super::parser::Command;
-use colored::*;
+use colored::Colorize;
 
 #[derive(Debug)]
 /// The crux of the whole cli, contains a commands field that stores all the program commands in a vector
@@ -40,7 +40,7 @@ impl Program {
 
         Program::add_cmd()
             .command("<app-name>, <command>")
-            .alias("<app-language>")
+            .alias("<app-alias>")
             .describe("Redirects the passed command to the target app")
             .option(
                 "-f | --first |  | If similar apps are found, runs the command on the first app.",
