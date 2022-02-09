@@ -1,13 +1,25 @@
 use std::fs::read_to_string;
 use std::path::Path;
 
-use super::fs_utils::read_file_tree;
+use super::fs_utils;
 
 use colored::Colorize;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct Config {
+pub struct WorkspaceConfig {
+    pub workspace: String,
+    pub source: Vec<String>,
+    pub test_groups: TestGroup,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct TestGroup {
+    pub core: Vec<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct ProjectConfig {
     pub info: Reference,
     pub policies: Vec<Policy>,
 }
@@ -52,29 +64,54 @@ pub struct MapCmd {
     pub cmd: Option<String>,
 }
 
-pub fn get_config(dir: &Path) -> Config {
+pub fn get_project_config(dir: &Path) -> ProjectConfig {
     let bolt_config_filename = "boltconfig.json";
-    let children = read_file_tree(dir).unwrap();
+
+    let err_msg = format!(
+        "Could not find a boltconfig.json in dir: {:?}",
+        Path::new(dir).to_str().unwrap()
+    );
+
+    let contents = get_config(
+        &dir.to_str().unwrap().to_owned(),
+        bolt_config_filename,
+        err_msg.as_str(),
+    );
+    let config: ProjectConfig = serde_json::from_str(contents.as_str()).unwrap();
+
+    config
+}
+
+pub fn get_workspace_config() -> WorkspaceConfig {
+    let root_config = "bolt.json";
+
+    let err_msg = format!(
+        "Could not find a root bolt.json in current dir. Is your project initialized with bolt?",
+    );
+
+    let contents = get_config(&".".to_owned(), root_config, err_msg.as_str());
+
+    let config: WorkspaceConfig = serde_json::from_str(contents.as_str()).unwrap();
+
+    config
+}
+
+fn get_config(dir: &String, file_name: &str, err_msg: &str) -> String {
+    let path = Path::new(dir);
+    let children = fs_utils::read_file_tree(path).unwrap();
 
     let target: &Vec<_> = &children
         .iter()
-        .filter(|c| c.to_ascii_lowercase().to_str() == Some(bolt_config_filename))
+        .filter(|c| c.to_ascii_lowercase().to_str() == Some(file_name))
         .collect();
 
     if target.is_empty() {
-        let err_msg = format!(
-            "Could not find a boltconfig.json in dir: {:?}",
-            Path::new(dir).to_str().unwrap()
-        );
         println!("{}", err_msg.red());
         std::process::exit(1)
     }
 
-    let config_path = dir.join(bolt_config_filename);
-
+    let config_path = path.join(file_name);
     let contents = read_to_string(config_path).unwrap();
 
-    let config: Config = serde_json::from_str(contents.as_str()).unwrap();
-
-    config
+    contents
 }
