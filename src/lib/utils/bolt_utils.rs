@@ -1,8 +1,10 @@
-use super::fs_utils::read_file_tree;
-use colored::Colorize;
-use serde::{Deserialize, Serialize};
 use std::fs::read_to_string;
 use std::path::Path;
+
+use super::fs_utils::read_file_tree;
+
+use colored::Colorize;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Config {
