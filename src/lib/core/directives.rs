@@ -1,6 +1,7 @@
-use colored::Colorize;
 use std::fs::{self, read_to_string};
 use std::path::{Path, PathBuf};
+
+use colored::Colorize;
 
 pub fn load_directives(dir: &PathBuf) {
     println!("🔃 {}", "Applying directives...".green());
