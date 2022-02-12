@@ -1,8 +1,8 @@
 use std::path::Path;
 
-use colored::Colorize;
-
 use super::super::utils;
+
+use colored::Colorize;
 
 pub fn setup_cmd(proj_name: &str) -> (String, utils::ProjectConfig) {
     let root_config = utils::get_workspace_config();
