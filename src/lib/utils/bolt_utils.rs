@@ -10,12 +10,7 @@ use serde::{Deserialize, Serialize};
 pub struct WorkspaceConfig {
     pub workspace: String,
     pub source: Vec<String>,
-    pub test_groups: TestGroup,
-}
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct TestGroup {
-    pub core: Vec<String>,
+    pub registered: Option<Vec<String>>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -68,7 +63,7 @@ pub fn get_project_config(dir: &Path) -> ProjectConfig {
     let bolt_config_filename = "boltconfig.json";
 
     let err_msg = format!(
-        "Could not find a boltconfig.json in dir: {:?}",
+        "Could not find a boltconfig.json for: {:?}",
         Path::new(dir).to_str().unwrap()
     );
 
@@ -107,11 +102,12 @@ fn get_config(dir: &String, file_name: &str, err_msg: &str) -> String {
 
     if target.is_empty() {
         println!("{}", err_msg.red());
+
         std::process::exit(1)
+    } else {
+        let config_path = path.join(file_name);
+        let contents = read_to_string(config_path).unwrap();
+
+        contents
     }
-
-    let config_path = path.join(file_name);
-    let contents = read_to_string(config_path).unwrap();
-
-    contents
 }
