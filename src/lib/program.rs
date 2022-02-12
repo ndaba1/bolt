@@ -18,7 +18,7 @@ impl Program {
             cmds: vec![],
             version: "0.1.0".to_owned(),
             author: "Victor Ndaba".to_owned(),
-            about: "A CLI for bootstrapping projects using Bolt".to_owned(),
+            about: "A CLI for managing projects using Bolt".to_owned(),
         }
     }
 
@@ -51,7 +51,7 @@ impl Program {
         Program::add_cmd()
             .command("up, <app-name>? ")
             .alias("u")
-            .describe("Starts all the apps in the workspace, or just the specified one.")
+            .describe("A command for starting projects in the workspace.")
             .option(
                 "-p | --priority | <value> | Specifies the priority to use when starting the apps.",
             )
@@ -69,7 +69,7 @@ impl Program {
         Program::add_cmd()
             .command("test, <app-name>? ")
             .alias("t")
-            .describe("Runs the tests for all apps in the project, or just the specified one.")
+            .describe("A command for running your configured tests for projects in the workspace.")
             .option("-p | --priority | <value> | Specifies the priority to use to run the tests")
             .option(hf)
             .build(self);
@@ -159,7 +159,10 @@ impl Program {
     /// Simply prints the version information for the program
     pub fn output_version() {
         println!();
-        println!("You are using bolt version: {}", Program::new().version);
+        println!(
+            "You are using bolt version: {}",
+            Program::new().version.cyan()
+        );
         println!();
     }
 
@@ -168,21 +171,22 @@ impl Program {
         let cfg: Vec<_> = cmd.name.split(",").collect();
 
         println!();
-        println!("USAGE: bolt {} [options] {} ", cfg[0], cfg[1]);
+        println!("{}", cmd.description.yellow());
         println!();
-        println!("{}", cmd.description);
+        println!("USAGE: bolt {} [options] {} ", cfg[0], cfg[1]);
         println!();
         println!("OPTIONS: ");
         for opt in &cmd.options {
             if opt.full.is_empty() {
                 continue;
             }
-            println!("  {}, {} {} ", opt.short, opt.full, opt.params);
+            let value = format!("  {}, {} {} ", opt.short, opt.full, opt.params);
+            println!("{}", value.cyan());
             println!("  {} ", opt.docstring);
             println!();
         }
         if !err.is_empty() {
-            println!("  {}", err);
+            println!("{}", err.red());
             println!();
         }
     }
