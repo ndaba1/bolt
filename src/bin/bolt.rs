@@ -3,7 +3,8 @@ use std::env;
 use bolt::parser::Command;
 use bolt::program::Program;
 
-use bolt::cmd::up;
+use bolt::cmd;
+use bolt::core;
 
 /// Creates a new instance of program and initializes it to build all commands.
 fn main() {
@@ -31,13 +32,15 @@ fn resolve_cmd(cfg: &Vec<&Command>, args: &Vec<String>) {
     let refined_args = &args[1..arr_len].to_vec();
 
     match config[0] {
-        "up" => up(refined_args, command),
+        "up" => cmd::up(refined_args, command),
         _ => println!("Something else"),
     }
 }
 
 fn redirect_cmd(prog: &Program, args: &Vec<String>) {
     if args.is_empty() {
-        Program::output_help(&prog.cmds, "You did not pass any command!")
+        Program::output_help(&prog.cmds, "You did not pass any command!");
+        return;
     }
+    core::redirect(args)
 }
