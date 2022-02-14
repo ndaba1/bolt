@@ -10,7 +10,7 @@ Bolt simplifies all this by acting as a "proxy" for all your commands. You perfo
     #each project contains a boltconfig.json file which has a priority field, it can be used as shown below:
 
     bolt up -p 1
-    #if you specifiy the -p(priority) flag, bolt starts all apps with a priority that is less than or equal to the provided value
+    #if you specifiy the -p(priority) flag, bolt starts all apps with a priority that is equal to the provided value
     #Other commands utilized in the workspace include:
 
     bolt test <app-name>? (-p ?)
@@ -22,7 +22,7 @@ Bolt is written in Rust and as you can see, it's more of a task runner than a bu
 
 
 ## Getting started with bolt
-Setting up bolt on your machine is actually pretty easy. All you have to do is get the executable, save it to anywhere in your disk(preferably somewhere that doesn't require elevated privileges) and add the location of the bolt application/executable to your path.
+Setting up bolt on your machine is actually pretty easy. All you have to do is download and save it to anywhere in your disk(preferably somewhere that doesn't require elevated privileges) then add the location to your path.
 
 - For windows, you can get the executable, [here](https://drive.google.com)
 - For MacOs, you can install bolt from homebrew, by running 
