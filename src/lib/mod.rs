@@ -12,4 +12,5 @@ pub mod parser;
 /// A set of general utilities for the program, such as reading and writing to the fs
 pub mod utils;
 
+/// The core module contains all the important executions of the program such as spawning of a new thread to execute a command
 pub mod core;

@@ -1,5 +1,6 @@
-use super::super::program::Program;
 use std::fmt::Debug;
+
+use super::super::program::Program;
 
 #[derive(Debug, Clone)]
 /// The structure of a command in the program

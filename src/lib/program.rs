@@ -1,4 +1,5 @@
 use super::parser::Command;
+
 use colored::Colorize;
 
 #[derive(Debug)]
@@ -6,8 +7,11 @@ use colored::Colorize;
 pub struct Program {
     /// Holds all the possible commands of the program
     pub cmds: Vec<Command>,
+    /// Contains the version information of the program
     pub version: String,
+    /// Contains the author's name
     pub author: String,
+    /// A simple string containing the tagline of the program
     pub about: String,
 }
 
@@ -21,7 +25,7 @@ impl Program {
             about: "A CLI for managing projects using Bolt".to_owned(),
         }
     }
-
+    /// This method is used to register a new command to the program
     pub fn add_cmd() -> Command {
         Command::new()
     }
