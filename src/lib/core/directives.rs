@@ -1,12 +1,16 @@
 use std::fs::{self, read_to_string};
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 use colored::Colorize;
 
-pub fn load_directives(dir: &PathBuf) {
-    println!("🔃 {}", "Applying directives...".green());
+pub fn load_directives(dir: &Path) {
     let file = dir.join("directives.bolt");
 
+    if !file.exists() {
+        return;
+    }
+
+    println!("🔃 {}", "Applying directives...".green());
     let contents = read_to_string(file).unwrap();
     let mut files_to_link: Vec<&str> = vec![];
 
@@ -29,7 +33,7 @@ pub fn load_directives(dir: &PathBuf) {
     }
 }
 
-fn make_link(path: &str, target: &PathBuf) {
+fn make_link(path: &str, target: &Path) {
     let dirs: Vec<&str> = path.split("/").collect();
     let filename = if dirs.is_empty() {
         path
@@ -39,11 +43,16 @@ fn make_link(path: &str, target: &PathBuf) {
     let target_path = Path::new(target).join(filename);
     let og_path = Path::new("./config").join(path);
 
-    let msg = format!("🔗 Linking: {:?}", &og_path);
-    println!("  {}", msg.green());
+    let val = og_path.to_str().unwrap();
 
-    match fs::copy(og_path, target_path) {
-        Ok(_) => return,
-        Err(_) => println!("Failed to link file"),
+    match fs::copy(&og_path, target_path) {
+        Ok(_) => {
+            let msg = format!("🔗 Linking: {} - Success", val.replace("\\", "/"));
+            println!("    {}", msg.cyan());
+        }
+        Err(_) => {
+            let msg = format!("🔗 Linking: {} - Failed", val.replace("\\", "/"));
+            println!("    {}", msg.red());
+        }
     }
 }

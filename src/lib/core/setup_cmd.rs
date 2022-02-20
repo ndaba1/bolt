@@ -1,6 +1,7 @@
 use std::path::Path;
 
 use super::super::utils;
+use super::directives;
 
 use colored::Colorize;
 
@@ -23,6 +24,7 @@ pub fn setup_cmd(proj_name: &str) -> (String, utils::ProjectConfig) {
         match utils::resolve_alias(src_name, proj_name, results) {
             Some(val) => {
                 config = utils::get_project_config(&Path::new(val.as_str()));
+                directives::load_directives(Path::new(val.as_str()));
 
                 return (val, config);
             }
@@ -37,6 +39,8 @@ pub fn setup_cmd(proj_name: &str) -> (String, utils::ProjectConfig) {
         }
     } else {
         config = utils::get_project_config(&Path::new(proj_path.as_str()));
+        directives::load_directives(Path::new(proj_path.as_str()));
+
         (proj_path, config)
     }
 }
