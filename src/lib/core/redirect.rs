@@ -32,7 +32,7 @@ pub fn redirect(args: &Vec<String>) {
     let msg = format!(
         "~> Running '{}' in '{}'",
         &command.trim().cyan(),
-        &proj_path.yellow()
+        &proj_path.cyan()
     );
 
     execute(&command, target, &full_path, true, &msg.as_str())
