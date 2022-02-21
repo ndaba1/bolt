@@ -3,14 +3,25 @@ use std::path::Path;
 
 use colored::Colorize;
 
-pub fn load_directives(dir: &Path) {
+pub fn load_directives(dir: &Path, verbose: bool) {
     let file = dir.join("directives.bolt");
 
     if !file.exists() {
+        if verbose {
+            println!(
+                "{} '{}'",
+                "No directives found for:".yellow(),
+                dir.to_str().unwrap().yellow()
+            );
+        }
         return;
     }
 
-    println!("🔃 {}", "Applying directives...".green());
+    println!(
+        "🔃 {} for: '{}'",
+        "Applying directives".green(),
+        dir.to_str().unwrap().green()
+    );
     let contents = read_to_string(file).unwrap();
     let mut files_to_link: Vec<&str> = vec![];
 
