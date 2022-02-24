@@ -26,13 +26,16 @@ fn main() {
 /// Matches through all the internal commands and calls the appropriate method.
 fn resolve_cmd(cfg: &Vec<&Command>, args: &Vec<String>) {
     let command = cfg.first().unwrap();
+
     let config: Vec<_> = command.name.split(",").collect();
     let arr_len = args.len();
 
     let refined_args = &args[1..arr_len].to_vec();
+    // (command.callback)(command, refined_args);
 
     match config[0] {
-        "up" => cmd::up(refined_args, command),
+        "up" => cmd::up(command, refined_args),
+        "load" => cmd::load(command, refined_args),
         _ => println!("Something else"),
     }
 }
