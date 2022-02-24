@@ -2,7 +2,7 @@ use std::fmt::Debug;
 
 use super::super::program::Program;
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 /// The structure of a command in the program
 pub struct Command {
     /// The name of the command i.e up, start, run
@@ -13,6 +13,8 @@ pub struct Command {
     pub description: String,
     /// Options are the flags that can be passed to the specified command i.e -q --priority
     pub options: Vec<Flag>,
+
+    pub callback: fn(&Command, &Vec<String>),
 }
 
 #[derive(Debug, Clone)]
@@ -73,6 +75,14 @@ impl Command {
         let val = self.clone();
         prog.cmds.push(val)
     }
+
+    pub fn action(&mut self, cb: fn(&Command, &Vec<String>)) -> &mut Command {
+        let action = cb;
+        self.callback = action;
+        self
+    }
+
+    pub fn parse() {}
 }
 
 impl Command {
@@ -83,13 +93,16 @@ impl Command {
             alias: "".to_owned(),
             description: "".to_owned(),
             options: vec![Flag {
-                short: "".to_owned(),
-                full: "".to_owned(),
+                short: "-h".to_owned(),
+                full: "--help".to_owned(),
                 params: "".to_owned(),
-                docstring: "".to_owned(),
+                docstring: "Displays the help command".to_owned(),
             }],
+            callback: Self::init,
         }
     }
+
+    pub fn init(&self, _args: &Vec<String>) {}
 }
 
 impl Default for Command {
