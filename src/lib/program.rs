@@ -1,8 +1,9 @@
+use super::cmd::{load, up};
 use super::parser::Command;
 
 use colored::Colorize;
 
-#[derive(Debug)]
+// #[derive(Debug)]
 /// The crux of the whole cli, contains a commands field that stores all the program commands in a vector
 pub struct Program {
     /// Holds all the possible commands of the program
@@ -40,7 +41,7 @@ impl Default for Program {
 impl Program {
     /// This function is called when the program starts, it creates all the commands of the program.
     pub fn init(&mut self) {
-        let hf = "-h | --help |  | Displays the help command";
+        // let hf = "-h | --help |  | Displays the help command";
 
         Program::add_cmd()
             .command("<app-name>, <command>")
@@ -49,7 +50,7 @@ impl Program {
             .option(
                 "-f | --first |  | If similar apps are found, runs the command on the first app.",
             )
-            .option(hf)
+            .action(up)
             .build(self);
 
         Program::add_cmd()
@@ -59,7 +60,15 @@ impl Program {
             .option(
                 "-p | --priority | <value> | Specifies the priority to use when starting the apps.",
             )
-            .option(hf)
+            .option("-s | --skip |  | Skips checking/installing the dependencies")
+            .action(load)
+            .build(self);
+
+        Program::add_cmd()
+            .command("load, <app-name>?")
+            .alias("l")
+            .describe("A command to load directives for a given app in the workspace")
+            .option("-a | --all |  | Load directives for all the projects")
             .build(self);
 
         Program::add_cmd()
@@ -67,7 +76,6 @@ impl Program {
             .alias("i")
             .describe("Creates and bootstraps a new bolt project workspace.")
             .option("-q | --quiet |  | Skips the prompts and sets up the default workspace")
-            .option(hf)
             .build(self);
 
         Program::add_cmd()
@@ -75,7 +83,6 @@ impl Program {
             .alias("t")
             .describe("A command for running your configured tests for projects in the workspace.")
             .option("-p | --priority | <value> | Specifies the priority to use to run the tests")
-            .option(hf)
             .build(self);
     }
 
