@@ -3,7 +3,7 @@ use std::process::Command;
 
 use colored::Colorize;
 
-pub fn execute(cmd: &String, dir: &PathBuf, wait: bool, msg: &str) {
+pub fn execute(cmd: String, dir: PathBuf, wait: bool, msg: &str) {
     let target: &str;
     if cfg!(windows) {
         target = "windows"
@@ -26,12 +26,6 @@ pub fn execute(cmd: &String, dir: &PathBuf, wait: bool, msg: &str) {
     if wait {
         command.wait().expect("Failed to wait on the child process");
     }
-
-    ctrlc::set_handler(move || {
-        command.kill().expect("Failed to kill child process");
-        println!("Bolt exited successfully!");
-    })
-    .expect("Failed to kill child process");
 }
 // /**
 //  * To do: implement graceful exit for the child_process when parent process:
