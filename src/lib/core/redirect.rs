@@ -28,5 +28,5 @@ pub fn redirect(args: &Vec<String>) {
         &proj_path.cyan()
     );
 
-    execute(&command, &full_path, true, &msg.as_str())
+    execute(command, full_path, true, &msg.as_str())
 }

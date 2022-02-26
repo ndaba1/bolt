@@ -55,10 +55,10 @@ fn start(cfg: ProjectConfig, value: String, dir: &String) {
     match core::resolve_policy(cfg.clone(), value) {
         (Some(val), cmd, msg) => {
             start(cfg.clone(), val, &dir);
-            core::execute(&cmd, &full_path, true, &msg);
+            core::execute(cmd, full_path, true, &msg);
         }
         (None, cmd, msg) => {
-            core::execute(&cmd, &full_path, true, &msg);
+            core::execute(cmd, full_path, true, &msg);
         }
     }
 }
