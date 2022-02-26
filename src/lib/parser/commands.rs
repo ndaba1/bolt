@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::fmt::Debug;
 
 use super::super::program::Program;
@@ -28,6 +29,12 @@ pub struct Flag {
     pub params: String,
     /// A description of the option and the parameters it accepts
     pub docstring: String,
+}
+
+#[derive(Debug)]
+pub struct ArgConfig {
+    exists: bool,
+    params: Option<String>,
 }
 
 /// Methods for command mutation
@@ -82,7 +89,60 @@ impl Command {
         self
     }
 
-    pub fn parse() {}
+    pub fn parse(&self, raw_args: &Vec<String>) -> (String, HashMap<String, ArgConfig>) {
+        let mut config: HashMap<String, ArgConfig> = HashMap::new();
+        let flags = &self.options;
+
+        for f in flags {
+            for arg in raw_args.iter().enumerate() {
+                if arg.1 == &f.short || arg.1 == &f.full {
+                    config.insert(
+                        arg.1.clone(),
+                        ArgConfig {
+                            exists: true,
+                            params: None,
+                        },
+                    );
+
+                    if !f.params.is_empty() {
+                        config.insert(
+                            arg.1.clone(),
+                            ArgConfig {
+                                exists: true,
+                                params: Some(raw_args[arg.0 + 1].clone()),
+                            },
+                        );
+                    }
+                }
+            }
+        }
+
+        let name = self.get_target(raw_args);
+
+        (name, config)
+    }
+
+    fn get_target(&self, args: &Vec<String>) -> String {
+        let flags: Vec<String> = args
+            .iter()
+            .map(|x| x.to_owned())
+            .filter(|x| {
+                let val = x.clone().to_owned();
+                let full: Vec<String> = self.options.iter().map(|f| f.full.clone()).collect();
+                let short: Vec<String> = self.options.iter().map(|f| f.short.clone()).collect();
+
+                full.contains(&val) || short.contains(&val)
+            })
+            .collect();
+
+        let mut name = String::from("");
+        for arg in args {
+            if !flags.contains(&arg) {
+                name = arg.clone()
+            }
+        }
+        name
+    }
 }
 
 impl Command {
