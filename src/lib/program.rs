@@ -1,4 +1,4 @@
-use super::cmd::{load, up};
+// use super::cmd::{load, up};
 use super::parser::Command;
 
 use colored::Colorize;
@@ -50,7 +50,6 @@ impl Program {
             .option(
                 "-f | --first |  | If similar apps are found, runs the command on the first app.",
             )
-            .action(up)
             .build(self);
 
         Program::add_cmd()
@@ -61,7 +60,6 @@ impl Program {
                 "-p | --priority | <value> | Specifies the priority to use when starting the apps.",
             )
             .option("-s | --skip |  | Skips checking/installing the dependencies")
-            .action(load)
             .build(self);
 
         Program::add_cmd()
