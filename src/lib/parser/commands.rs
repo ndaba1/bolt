@@ -14,8 +14,8 @@ pub struct Command {
     pub description: String,
     /// Options are the flags that can be passed to the specified command i.e -q --priority
     pub options: Vec<Flag>,
-
-    pub callback: fn(&Command, &Vec<String>),
+    /// Stores the actual function that is to be invoked
+    pub callback: fn(&Command, &Vec<String>) -> (),
 }
 
 #[derive(Debug, Clone)]
@@ -29,12 +29,6 @@ pub struct Flag {
     pub params: String,
     /// A description of the option and the parameters it accepts
     pub docstring: String,
-}
-
-#[derive(Debug)]
-pub struct ArgConfig {
-    exists: bool,
-    params: Option<String>,
 }
 
 /// Methods for command mutation
@@ -78,70 +72,45 @@ impl Command {
         self
     }
 
+    /// Takes a mutable reference to the program struct and pushes the constructed command to the the `cmds` field in the struct
     pub fn build(&mut self, prog: &mut Program) {
         let val = self.clone();
         prog.cmds.push(val)
     }
 
-    pub fn action(&mut self, cb: fn(&Command, &Vec<String>)) -> &mut Command {
+    /// Takes a closure that invokes the callback function to execute functionality
+    pub fn action(&mut self, cb: fn(&Command, &Vec<String>) -> ()) -> &mut Command {
         let action = cb;
         self.callback = action;
         self
     }
 
-    pub fn parse(&self, raw_args: &Vec<String>) -> (String, HashMap<String, ArgConfig>) {
-        let mut config: HashMap<String, ArgConfig> = HashMap::new();
-        let flags = &self.options;
+    /// Takes the args passed to the program as input, checks for flags and returns a hashmap containing the config for each of the flags, and the target name if any
+    pub fn parse(&self, raw_args: &Vec<String>) -> (String, HashMap<String, Option<String>>) {
+        let mut switches: Vec<String> = vec![];
+        let mut config: HashMap<String, Option<String>> = HashMap::new();
 
-        for f in flags {
+        for f in &self.options {
             for arg in raw_args.iter().enumerate() {
                 if arg.1 == &f.short || arg.1 == &f.full {
-                    config.insert(
-                        arg.1.clone(),
-                        ArgConfig {
-                            exists: true,
-                            params: None,
-                        },
-                    );
+                    config.insert(arg.1.clone(), None);
 
                     if !f.params.is_empty() {
-                        config.insert(
-                            arg.1.clone(),
-                            ArgConfig {
-                                exists: true,
-                                params: Some(raw_args[arg.0 + 1].clone()),
-                            },
-                        );
+                        config.insert(arg.1.clone(), Some(raw_args[arg.0 + 1].clone()));
                     }
+                    switches.push(arg.1.clone())
                 }
             }
         }
 
-        let name = self.get_target(raw_args);
-
-        (name, config)
-    }
-
-    fn get_target(&self, args: &Vec<String>) -> String {
-        let flags: Vec<String> = args
-            .iter()
-            .map(|x| x.to_owned())
-            .filter(|x| {
-                let val = x.clone().to_owned();
-                let full: Vec<String> = self.options.iter().map(|f| f.full.clone()).collect();
-                let short: Vec<String> = self.options.iter().map(|f| f.short.clone()).collect();
-
-                full.contains(&val) || short.contains(&val)
-            })
-            .collect();
-
         let mut name = String::from("");
-        for arg in args {
-            if !flags.contains(&arg) {
+        for arg in raw_args {
+            if !switches.contains(&arg) {
                 name = arg.clone()
             }
         }
-        name
+
+        (name, config)
     }
 }
 
