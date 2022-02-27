@@ -5,6 +5,6 @@ pub mod summary;
 pub mod test;
 pub mod up;
 
+pub use init::init;
 pub use load::load;
-// pub use test::test;
 pub use up::up;
