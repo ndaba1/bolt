@@ -2,7 +2,6 @@ pub mod directives;
 pub mod errors;
 pub mod execute;
 pub mod policies;
-pub mod process_args;
 pub mod redirect;
 pub mod setup_cmd;
 
