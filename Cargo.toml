@@ -2,8 +2,9 @@
 name = "bolt-cli"
 version = "0.1.0"
 edition = "2018"
-description = "A CLI for managing monorepos using Bolt"
+description = "A CLI for managing multi-lingual monorepos"
 license = "MIT"
+repository = "https://github.com/ndaba1/bolt"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [lib]
