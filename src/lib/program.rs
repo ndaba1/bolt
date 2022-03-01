@@ -1,4 +1,4 @@
-// use super::cmd::{load, up};
+use super::cmd::{init, load, test, up};
 use super::parser::Command;
 
 use colored::Colorize;
@@ -23,7 +23,7 @@ impl Program {
             cmds: vec![],
             version: "0.1.0".to_owned(),
             author: "Victor Ndaba".to_owned(),
-            about: "A CLI for managing projects using Bolt".to_owned(),
+            about: "A CLI for managing multi-lingual monorepos".to_owned(),
         }
     }
     /// This method is used to register a new command to the program
@@ -41,8 +41,6 @@ impl Default for Program {
 impl Program {
     /// This function is called when the program starts, it creates all the commands of the program.
     pub fn init(&mut self) {
-        // let hf = "-h | --help |  | Displays the help command";
-
         Program::add_cmd()
             .command("<app-name>, <command>")
             .alias("<app-alias>")
@@ -53,20 +51,22 @@ impl Program {
             .build(self);
 
         Program::add_cmd()
-            .command("up, <app-name>? ")
+            .command("up, <app-name>")
             .alias("u")
             .describe("A command for starting projects in the workspace.")
             .option(
                 "-p | --priority | <value> | Specifies the priority to use when starting the apps.",
             )
             .option("-s | --skip |  | Skips checking/installing the dependencies")
+            .action(|cmd, args| up(cmd, args))
             .build(self);
 
         Program::add_cmd()
-            .command("load, <app-name>?")
+            .command("load, <app-name>")
             .alias("l")
             .describe("A command to load directives for a given app in the workspace")
             .option("-a | --all |  | Load directives for all the projects")
+            .action(|cmd, args| load(cmd, args))
             .build(self);
 
         Program::add_cmd()
@@ -74,13 +74,15 @@ impl Program {
             .alias("i")
             .describe("Creates and bootstraps a new bolt project workspace.")
             .option("-q | --quiet |  | Skips the prompts and sets up the default workspace")
+            .action(|cmd, args| init(cmd, args))
             .build(self);
 
         Program::add_cmd()
-            .command("test, <app-name>? ")
+            .command("test, <app-name>")
             .alias("t")
             .describe("A command for running your configured tests for projects in the workspace.")
             .option("-p | --priority | <value> | Specifies the priority to use to run the tests")
+            .action(|cmd, args| test(cmd, args))
             .build(self);
     }
 
@@ -115,20 +117,17 @@ impl Program {
                 }
                 true
             }
-            None => {
-                // Program::output_help(cmds, "You have not passed any command!");
-                false
-            }
+            None => false,
         }
     }
 
     fn is_special_flag(value: &str, cmds: &Vec<Command>) -> bool {
         if value == "--help" || value == "-h" {
             Program::output_help(&cmds, "");
-            return true;
+            std::process::exit(0);
         } else if value == "--version" || value == "-v" {
             Program::output_version();
-            return true;
+            std::process::exit(0);
         }
         false
     }
@@ -140,6 +139,12 @@ impl Program {
         println!();
         println!("USAGE: ");
         println!("   bolt [command] [options]");
+        println!();
+        println!("OPTIONS: ");
+        println!("   {}", "-v, --version".cyan());
+        println!("   Outputs the version of the CLI\n");
+        println!("   {}", "-h, --help".cyan());
+        println!("   Prints out help information");
         println!();
         println!("COMMANDS: ");
         for cmd in cmds {
@@ -182,7 +187,7 @@ impl Program {
         println!();
         println!("{}", cmd.description.yellow());
         println!();
-        println!("USAGE: bolt {} [options] {} ", cfg[0], cfg[1]);
+        println!("USAGE: bolt {} [options] {} ", cfg[0], cfg[1].trim());
         println!();
         println!("OPTIONS: ");
         for opt in &cmd.options {
