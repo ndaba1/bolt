@@ -8,12 +8,6 @@ use super::super::utils;
 use colored::Colorize;
 
 pub fn load(cmd: &parser::Command, args: &Vec<String>) {
-    if args.is_empty() {
-        // dont throw err, instead prompt for opts: run all, enter prio, choose
-        Program::output_command_help(cmd, "Missing required arguments");
-        return;
-    }
-
     let (target, vals) = cmd.parse(args);
 
     if vals.contains_key("-h") | vals.contains_key("--help") {
