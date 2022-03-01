@@ -18,20 +18,14 @@ Bolt simplifies all this by acting as a "proxy" for all your commands. You perfo
  
 ```
 
-Bolt is written in Rust and as you can see, it's more of a task runner than a build tool. It doesnt override the native build tools (yet) but rather wraps around them providing a unified interface for running commands and thus managing multi-lingual projects in a monorepo. 
+As you can see, it's more of a task runner than a build tool. It doesnt override the native build tools (yet) but rather wraps around them providing a unified interface for running commands and thus managing multi-lingual projects in a monorepo. 
 
 
 ## Getting started with bolt
 Setting up bolt on your machine is actually pretty easy. All you have to do is download and save it to anywhere in your disk(preferably somewhere that doesn't require elevated privileges) then add the location to your path.
 
-- For windows, you can get the executable, [here](https://drive.google.com)
-- For MacOs, you can install bolt from homebrew, by running 
-  ```bash
-  brew update
-
-  brew install bolt
-  ```
-- For Linux systems, you can use your specific package manager to install bolt
+Alternatively, you could setup a cargo environment and simply run `cargo install
+bolt-cli` and cargo will configure everything for you
 
 ## Bolt internals
 Bolt requires two critical files for it to run correctly:
