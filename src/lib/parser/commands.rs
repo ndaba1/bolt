@@ -87,6 +87,11 @@ impl Command {
 
     /// Takes the args passed to the program as input, checks for flags and returns a hashmap containing the config for each of the flags, and the target name if any
     pub fn parse(&self, raw_args: &Vec<String>) -> (String, HashMap<String, Option<String>>) {
+        if raw_args.is_empty() {
+            Program::output_command_help(self, "Missing required arguments");
+            std::process::exit(1);
+        }
+
         let mut switches: Vec<String> = vec![];
         let mut config: HashMap<String, Option<String>> = HashMap::new();
 
