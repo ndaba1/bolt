@@ -1,11 +1,11 @@
+use std::collections::HashMap;
 use std::path::Path;
 
 use super::super::core;
-use super::super::parser;
 use super::super::utils::ProjectConfig;
 
-pub fn test(cmd: &parser::Command, args: &Vec<String>) {
-    let (target, _vals) = cmd.parse(args);
+pub fn test(vals: HashMap<String, String>, _opts: HashMap<String, String>) {
+    let target = vals.get("app_name").unwrap();
     let (proj_path, config) = core::setup_cmd(&target);
 
     core::load_directives(Path::new(&proj_path.as_str()), false);
