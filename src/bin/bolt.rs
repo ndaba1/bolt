@@ -1,35 +1,37 @@
-use std::env;
+use bolt::cmd::{load, up};
 
-use bolt::parser::Command;
-use bolt::program::Program;
+use cmder::{Event, Program};
 
-use bolt::core;
-
-/// Creates a new instance of program and initializes it to build all commands.
 fn main() {
-    let args: Vec<String> = env::args().collect();
-    let refined_args = args[1..].to_vec();
-
     let mut program = Program::new();
-    program.init();
 
-    let config = program.parse(&refined_args);
-    match config {
-        Some(val) => resolve_cmd(&val, &refined_args),
-        None => redirect_cmd(&program, &refined_args),
-    }
-}
+    program
+        .version("0.1.0")
+        .description("A CLI for managing multi-lingual monorepos")
+        .author("Victor M Ndaba <vndabam@gmail.com>");
 
-/// Matches through all the internal commands and calls the appropriate method.
-fn resolve_cmd(cfg: &Vec<&Command>, args: &Vec<String>) {
-    let command = cfg.first().unwrap();
-    (command.callback)(command, &args[1..].to_vec());
-}
+    program
+        .add_cmd()
+        .command("up <app-name>")
+        .alias("u")
+        .describe("A command to start a given app in the workspace")
+        .option("-s --skip", "Skip checking/installing the dependencies")
+        .option("-p --priority", "The priority to use when starting apps")
+        .action(|vals, opts| up(vals, opts))
+        .build(&mut program);
 
-fn redirect_cmd(prog: &Program, args: &Vec<String>) {
-    if args.is_empty() {
-        Program::output_help(&prog.cmds, "You did not pass any command!");
-        return;
-    }
-    core::redirect(args)
+    program
+        .add_cmd()
+        .command("load [app-name]")
+        .alias("l")
+        .describe("A command to load directives for a given app in the workspace")
+        .option("-a --all", "Load directives for all the apps")
+        .action(|vals, opts| load(vals, opts))
+        .build(&mut program);
+
+    program.on(Event::OutputHelp, |_p, _v| {
+        println!();
+    });
+
+    program.parse();
 }
