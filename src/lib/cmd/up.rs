@@ -1,33 +1,21 @@
+use std::collections::HashMap;
 use std::path::Path;
 
-use colored::Colorize;
-
 use super::super::core;
-use super::super::parser;
-use super::super::program::Program;
 use super::super::utils::ProjectConfig;
 
-pub fn up(cmd: &parser::Command, args: &Vec<String>) {
-    let (target, vals) = cmd.parse(args);
-
-    if vals.contains_key("-h") | vals.contains_key("--help") {
-        Program::output_command_help(cmd, "");
-        return;
-    }
-
-    if target.is_empty() && !vals.contains_key("-p") | !vals.contains_key("--priority") {
-        println!(
-            "{}",
-            "Please pass the name of the project to start, or specify a priority level".red()
-        );
-        return;
-    }
-    let (proj_path, config) = core::setup_cmd(&target);
+pub fn up(vals: HashMap<String, String>, opts: HashMap<String, String>) {
+    let target = vals.get("app_name").unwrap();
     let mut skip_deps = false;
 
-    if vals.contains_key("-s") | vals.contains_key("--skip") {
+    if opts.contains_key("skip") {
         skip_deps = true
     }
+
+    // handle starting multiple apps
+    if opts.contains_key("priority") {}
+
+    let (proj_path, config) = core::setup_cmd(&target);
 
     core::load_directives(Path::new(&proj_path.as_str()), false);
     start(config, "up".to_owned(), &proj_path, skip_deps)

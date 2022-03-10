@@ -1,38 +1,29 @@
+use std::collections::HashMap;
 use std::path::Path;
 
 use super::super::core;
-use super::super::parser;
-use super::super::program::Program;
 use super::super::utils;
 
-use colored::Colorize;
+pub fn load(vals: HashMap<String, String>, opts: HashMap<String, String>) {
+    let target = vals.get("app_name");
 
-pub fn load(cmd: &parser::Command, args: &Vec<String>) {
-    let (target, vals) = cmd.parse(args);
-
-    if vals.contains_key("-h") | vals.contains_key("--help") {
-        Program::output_command_help(cmd, "");
-        return;
-    }
-
-    if vals.contains_key("-a") | vals.contains_key("--all") {
-        for p in get_projects() {
-            let (proj_path, _config) = core::setup_cmd(&p);
+    match target {
+        Some(value) => {
+            let (proj_path, _config) = core::setup_cmd(value);
             core::load_directives(Path::new(proj_path.as_str()), true);
         }
-        return;
+        None => {
+            if opts.contains_key("all") {
+                for p in get_projects() {
+                    let (proj_path, _config) = core::setup_cmd(&p);
+                    core::load_directives(Path::new(proj_path.as_str()), true);
+                }
+                return;
+            } else {
+                println!("Please provide an app-name or pass the -a flag to load all directives");
+            }
+        }
     }
-
-    if target.is_empty() && !vals.contains_key("-a") | !vals.contains_key("--all") {
-        println!(
-            "{}",
-            "Please specify at least one project or pass the -a flag to load all directives".red()
-        );
-        return;
-    }
-
-    let (proj_path, _config) = core::setup_cmd(&target);
-    core::load_directives(Path::new(proj_path.as_str()), true);
 }
 
 fn get_projects() -> Vec<String> {
