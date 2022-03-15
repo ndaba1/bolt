@@ -1,4 +1,5 @@
 use bolt::cmd::{load, up};
+use bolt::core;
 
 use cmder::{Event, Program};
 
@@ -53,6 +54,13 @@ fn main() {
             dbg!(vals, opts);
         })
         .build(&mut program);
+
+    program.on(Event::UnknownCommand, |_p, _v| {
+        let args: Vec<_> = std::env::args().collect();
+        let args = args[1..].to_vec();
+
+        core::redirect(&args);
+    });
 
     program.on(Event::OutputHelp, |_p, _v| {
         println!();
