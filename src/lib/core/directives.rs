@@ -1,6 +1,7 @@
 use std::fs::{self, read_to_string};
 use std::path::Path;
 
+use cmder::{Designation, Formatter, Theme};
 use colored::Colorize;
 
 pub fn load_directives(dir: &Path, verbose: bool) {
@@ -8,11 +9,10 @@ pub fn load_directives(dir: &Path, verbose: bool) {
 
     if !file.exists() {
         if verbose {
-            println!(
-                "{} '{}'",
-                "No directives found for:".yellow(),
-                dir.to_str().unwrap().yellow()
-            );
+            let msg = format!("{} '{}'", "No directives found for:", dir.to_str().unwrap());
+            let mut fmtr = Formatter::new(Theme::default());
+            fmtr.add(Designation::Headline, &msg);
+            fmtr.print();
         }
         return;
     }
