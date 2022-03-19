@@ -4,8 +4,7 @@ Bolt is a command line tool built for managing multilingual projects. It was bui
 Bolt simplifies all this by acting as a "proxy" for all your commands. You perform all the actions at the root of the workspace using bolt and specify which app the action is meant for and bolt resolves the action and creates a child process which executes the said command. The following is a short primer on bolt and its usage:
 
 ```bash
-    bolt up <app-name>?
-    #the app-name is optional, if you dont provide it, you will be prompted for which app to start
+    bolt up <app-name>
     #the app command simply starts-up the specified application
     #each project contains a boltconfig.json file which has a priority field, it can be used as shown below:
 
@@ -13,7 +12,7 @@ Bolt simplifies all this by acting as a "proxy" for all your commands. You perfo
     #if you specifiy the -p(priority) flag, bolt starts all apps with a priority that is equal to the provided value
     #Other commands utilized in the workspace include:
 
-    bolt test <app-name>? (-p ?)
+    bolt test <app-name> (-p ?)
     #same rules for priority apply, runs all configured tests
  
 ```
@@ -22,10 +21,14 @@ As you can see, it's more of a task runner than a build tool. It doesnt override
 
 
 ## Getting started with bolt
-Setting up bolt on your machine is actually pretty easy. All you have to do is download and save it to anywhere in your disk(preferably somewhere that doesn't require elevated privileges) then add the location to your path.
+Setting up bolt is actually pretty easy. All you have to do is download and save it to anywhere in your disk(preferably somewhere that doesn't require elevated privileges) then add the location to your path. The specific platform binaries can be found in the releases section.
 
-Alternatively, you could setup a cargo environment and simply run `cargo install
-bolt-cli` and cargo will configure everything for you
+Alternatively, if you have a rust environment setup, simply run:
+
+ ```rust
+  cargo install bolt-cli
+ ```
+ and cargo will configure everything for you
 
 ## Bolt internals
 Bolt requires two critical files for it to run correctly:
@@ -91,14 +94,10 @@ cargo build
 
 ## Bolt features implementation: 
 
-### Completed: 
-
 - [x] Running bolt up `app-name` starts up the given app
 - [x] Bolt can successfully redirect your commands from the root directory. i.e running `bolt angular-app ng g c navbar` will run the command in the project named `angular-app`
 - [x] Bolt can resolve project aliases i.e, if your project has a long name such as `my_super_awesome_python_app`, you can add an alias for bolt to use by adding the field alias to your boltconfig.json 
-
-### To be implented:
-
+- [ ] Running `bolt ci <app-name>` runs the configured CI workflows for the provided app
 - [ ] Enable creation of a new workspace by running bolt init 
 - [ ] Adding bolt to an existing monorepo by running bolt bootstrap
 - [ ] Running configured tests by running bolt test
