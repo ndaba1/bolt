@@ -39,6 +39,15 @@ fn main() {
 
     program
         .add_cmd()
+        .command("ci <app-name>")
+        .alias("c")
+        .describe("Run A CI workflow for the provided app")
+        .option("-a --all", "Run CI workflows for all apps in the workspace")
+        .action(|_v, _o| {})
+        .build(&mut program);
+
+    program
+        .add_cmd()
         .command("test <app-name>")
         .alias("t")
         .describe("A command to run the configured tests for the provided app")
