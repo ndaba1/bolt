@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 use std::process::Command;
 
-use colored::Colorize;
+use cmder::{Designation, Formatter, Theme};
 
 pub fn execute(cmd: String, dir: PathBuf, wait: bool, msg: &str) {
     let target: &str;
@@ -14,7 +14,9 @@ pub fn execute(cmd: String, dir: PathBuf, wait: bool, msg: &str) {
     let shell = if target == "windows" { "cmd" } else { "sh" };
     let first_arg = if target == "windows" { "/C" } else { "-c" };
 
-    println!("{}", msg.green());
+    let mut fmtr = Formatter::new(Theme::default());
+    fmtr.add(Designation::Headline, msg);
+    fmtr.print();
 
     let mut command = Command::new(shell)
         .arg(first_arg)
