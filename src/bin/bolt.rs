@@ -1,4 +1,4 @@
-use bolt::cmd::{load, up};
+use bolt::cmd;
 use bolt::core;
 
 use cmder::{Event, Program};
@@ -25,7 +25,7 @@ fn main() {
             "-p --priority <priority-value>",
             "The priority to use when starting apps",
         )
-        .action(|vals, opts| up(vals, opts))
+        .action(cmd::up)
         .build(&mut program);
 
     program
@@ -34,7 +34,7 @@ fn main() {
         .alias("l")
         .describe("A command to load directives for a given app in the workspace")
         .option("-a --all", "Load directives for all the apps")
-        .action(|vals, opts| load(vals, opts))
+        .action(cmd::load)
         .build(&mut program);
 
     program

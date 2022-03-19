@@ -18,7 +18,6 @@ pub fn load(vals: HashMap<String, String>, opts: HashMap<String, String>) {
                     let (proj_path, _config) = core::setup_cmd(&p);
                     core::load_directives(Path::new(proj_path.as_str()), true);
                 }
-                return;
             } else {
                 println!("Please provide an app-name or pass the -a flag to load all directives");
             }

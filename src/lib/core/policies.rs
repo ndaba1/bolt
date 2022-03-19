@@ -16,7 +16,7 @@ pub fn resolve_policy(cfg: ProjectConfig, val: String) -> (Option<String>, Strin
 
     match target.as_str() {
         "cli" => {
-            let target_cli = cfg.info.env.cli.unwrap().clone();
+            let target_cli = cfg.info.env.cli.unwrap();
             let target_cmd = policy.map_to.cmd.clone().unwrap();
 
             (

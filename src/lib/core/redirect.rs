@@ -4,14 +4,14 @@ use super::{execute, setup_cmd};
 
 use colored::Colorize;
 
-pub fn redirect(args: &Vec<String>) {
+pub fn redirect(args: &[String]) {
     let name = &args[0];
 
     let (proj_path, _config) = setup_cmd(name.as_str());
     let root_path = std::env::current_dir().unwrap();
     let full_path = Path::new(&root_path).join(&proj_path);
 
-    if !(args.len() > 1) {
+    if args.len() <= 1 {
         println!("{}", "You did not pass any arguments.".red());
         std::process::exit(1)
     }
@@ -19,7 +19,7 @@ pub fn redirect(args: &Vec<String>) {
     let mut command = String::new();
     for arg in &args[1..] {
         command.push_str(arg);
-        command.push_str(&" ")
+        command.push(' ')
     }
 
     let msg = format!(
@@ -28,5 +28,5 @@ pub fn redirect(args: &Vec<String>) {
         &proj_path.cyan()
     );
 
-    execute(command, full_path, true, &msg.as_str())
+    execute(command, full_path, true, &msg)
 }

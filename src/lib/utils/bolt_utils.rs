@@ -80,9 +80,9 @@ pub fn get_project_config(dir: &Path) -> ProjectConfig {
 pub fn get_workspace_config() -> WorkspaceConfig {
     let root_config = "bolt.json";
 
-    let err_msg = format!(
-        "Could not find a root bolt.json in current dir. Is your project initialized with bolt?",
-    );
+    let err_msg =
+        "Could not find a root bolt.json in current dir. Is your project initialized with bolt?"
+            .to_string();
 
     let contents = get_config(&".".to_owned(), root_config, err_msg.as_str());
 
@@ -91,7 +91,7 @@ pub fn get_workspace_config() -> WorkspaceConfig {
     config
 }
 
-fn get_config(dir: &String, file_name: &str, err_msg: &str) -> String {
+fn get_config(dir: &str, file_name: &str, err_msg: &str) -> String {
     let path = Path::new(dir);
     let children = fs_utils::read_file_tree(path).unwrap();
 
@@ -106,8 +106,6 @@ fn get_config(dir: &String, file_name: &str, err_msg: &str) -> String {
         std::process::exit(1)
     } else {
         let config_path = path.join(file_name);
-        let contents = read_to_string(config_path).unwrap();
-
-        contents
+        read_to_string(config_path).unwrap()
     }
 }

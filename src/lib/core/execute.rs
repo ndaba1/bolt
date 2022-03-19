@@ -4,12 +4,7 @@ use std::process::Command;
 use cmder::{Designation, Formatter, Theme};
 
 pub fn execute(cmd: String, dir: PathBuf, wait: bool, msg: &str) {
-    let target: &str;
-    if cfg!(windows) {
-        target = "windows"
-    } else {
-        target = "unix"
-    }
+    let target = if cfg!(windows) { "windows" } else { "unix" };
 
     let shell = if target == "windows" { "cmd" } else { "sh" };
     let first_arg = if target == "windows" { "/C" } else { "-c" };
