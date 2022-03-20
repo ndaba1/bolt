@@ -27,14 +27,14 @@ pub fn load_directives(dir: &Path, verbose: bool) {
 
     for line in contents.lines() {
         if line.starts_with("@apply") {
-            let vals: Vec<&str> = line.split(" ").collect();
+            let vals: Vec<&str> = line.split(' ').collect();
             let len = vals.len();
 
             for v in &vals[1..len] {
                 if v.is_empty() {
                     return;
                 }
-                files_to_link.push(&v)
+                files_to_link.push(v)
             }
         }
     }
@@ -45,7 +45,7 @@ pub fn load_directives(dir: &Path, verbose: bool) {
 }
 
 fn make_link(path: &str, target: &Path) {
-    let dirs: Vec<&str> = path.split("/").collect();
+    let dirs: Vec<&str> = path.split('/').collect();
     let filename = if dirs.is_empty() {
         path
     } else {
@@ -58,11 +58,11 @@ fn make_link(path: &str, target: &Path) {
 
     match fs::copy(&og_path, target_path) {
         Ok(_) => {
-            let msg = format!("🔗 Linking: {} - Success", val.replace("\\", "/"));
+            let msg = format!("🔗 Linking: {} - Success", val.replace('\\', "/"));
             println!("    {}", msg.cyan());
         }
         Err(_) => {
-            let msg = format!("🔗 Linking: {} - Failed", val.replace("\\", "/"));
+            let msg = format!("🔗 Linking: {} - Failed", val.replace('\\', "/"));
             println!("    {}", msg.red());
         }
     }

@@ -68,7 +68,7 @@ pub fn get_project_config(dir: &Path) -> ProjectConfig {
     );
 
     let contents = get_config(
-        &dir.to_str().unwrap().to_owned(),
+        &dir.to_str().unwrap(),
         bolt_config_filename,
         err_msg.as_str(),
     );
@@ -84,7 +84,7 @@ pub fn get_workspace_config() -> WorkspaceConfig {
         "Could not find a root bolt.json in current dir. Is your project initialized with bolt?"
             .to_string();
 
-    let contents = get_config(&".".to_owned(), root_config, err_msg.as_str());
+    let contents = get_config(&".", root_config, err_msg.as_str());
 
     let config: WorkspaceConfig = serde_json::from_str(contents.as_str()).unwrap();
 

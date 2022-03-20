@@ -21,7 +21,7 @@ pub fn resolve_alias(root: &str, alias: &str, results: Vec<OsString>) -> Option<
                 }
                 None => {
                     let proj_path: String = format!("{}/{}/", root, str_version);
-                    let config = utils::get_project_config(&Path::new(proj_path.as_str()));
+                    let config = utils::get_project_config(Path::new(proj_path.as_str()));
 
                     config.info.alias == alias
                 }
