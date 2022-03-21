@@ -42,11 +42,11 @@ jobs:
         with:
           command: test
 
-      - uses: actions-rs/cargo@v1
-        name: Format Check
-        with:
-          command: fmt
-          args: --all -- --check
+#       - uses: actions-rs/cargo@v1
+#         name: Format Check
+#         with:
+#           command: fmt
+#           args: --all -- --check
 
 #       - uses: actions-rs/cargo@v1
 #         name: Clippy
