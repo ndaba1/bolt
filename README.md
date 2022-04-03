@@ -1,3 +1,7 @@
+<p align="center">
+    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/ndaba1/bolt/Bolt-CI-workflow">
+</p>
+
 # Bolt
 Bolt is a command line tool built for managing multilingual projects. It was built out of necessity. I was managing a project organized into a monorepo such that each project was a different language: i.e Javascript, Dart, Elixir, Python and some more. It was getting hard to manage all the individual projects since you have to first `cd` into the said project directory and run your commands from there.
 
