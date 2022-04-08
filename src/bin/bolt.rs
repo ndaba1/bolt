@@ -67,9 +67,8 @@ fn main() {
         core::redirect(&args);
     });
 
-    program.on(Event::OutputHelp, |_p, _v| {
-        println!();
-    });
+    program.on(Event::OutputHelp, |_p, _v| println!());
+    program.on(Event::OutputCommandHelp, |_p, _v| println!());
 
     program.parse();
 }
