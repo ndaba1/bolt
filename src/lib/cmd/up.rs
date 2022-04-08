@@ -6,11 +6,12 @@ use super::super::utils::ProjectConfig;
 
 pub fn up(vals: HashMap<String, String>, opts: HashMap<String, String>) {
     let target = vals.get("app_name").unwrap();
-    let mut skip_deps = false;
 
-    if opts.contains_key("skip") {
-        skip_deps = true
-    }
+    let skip_deps = if opts.contains_key("skip") {
+        true
+    } else {
+        false
+    };
 
     // handle starting multiple apps
     if opts.contains_key("priority") {}
