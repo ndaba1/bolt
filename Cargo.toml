@@ -19,4 +19,6 @@ toml = "0.5.8"
 ctrlc = "3.2.1"
 signal-hook = "0.3.13"
 cmder = "0.3.0"
+directories = "4.0.1"
+cached = "0.34.0"
 
