@@ -9,7 +9,7 @@ pub fn load_directives(dir: &Path, verbose: bool) {
 
     if !file.exists() {
         if verbose {
-            let msg = format!("{} '{}'", "No directives found for:", dir.to_str().unwrap());
+            let msg = format!("No directives found for: '{}'\n", dir.to_str().unwrap());
             let mut fmtr = Formatter::default();
             fmtr.add(Designation::Headline, &msg);
             fmtr.print();
@@ -28,9 +28,8 @@ pub fn load_directives(dir: &Path, verbose: bool) {
     for line in contents.lines() {
         if line.starts_with("@apply") {
             let vals: Vec<&str> = line.split(' ').collect();
-            let len = vals.len();
 
-            for v in &vals[1..len] {
+            for v in &vals[1..] {
                 if v.is_empty() {
                     return;
                 }

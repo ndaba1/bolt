@@ -10,7 +10,7 @@ pub fn execute(cmd: String, dir: PathBuf, wait: bool, msg: &str) {
     let first_arg = if target == "windows" { "/C" } else { "-c" };
 
     let mut fmtr = Formatter::new(Theme::default());
-    fmtr.add(Designation::Headline, msg);
+    fmtr.add(Designation::Headline, &format!("{} \n", msg));
     fmtr.print();
 
     let mut command = Command::new(shell)
