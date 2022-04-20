@@ -107,9 +107,9 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
 name = "cmder"
-version = "0.3.0"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d3715487c00eec6eeb41f7fb672ebd2567b5ad8f48cfe67eaec37b5469980d58"
+checksum = "35e35c06c4025a782dd2c89e18a40e618df122d608757d0519a1cf6e3af0552f"
 dependencies = [
  "termcolor",
 ]
